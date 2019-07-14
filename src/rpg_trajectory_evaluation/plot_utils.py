@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import rc
+import transformations as tf
+import numpy as np
 rc('font', **{'family': 'serif', 'serif': ['Cardo']})
 rc('text', usetex=True)
 
@@ -76,6 +78,17 @@ def plot_aligned_top(ax, p_gt, p_es, n_align_frames):
             p_es[:n_align_frames:10, :], p_gt[:n_align_frames:10, :]):
         ax.plot([x1, x2], [y1, y2], '-', color="gray")
 
+def plot_xyz(ax, distances, pos, i, color, name):
+    ax.plot(distances, pos[:,i], color+'-', label=name)
+
+def plot_rpy(ax, distances, quat, angle, color, name):
+    # Convert quaternion to Euler angles
+    rpy = np.zeros(np.shape(quat[:,0:3]))
+    for i in range(np.shape(quat[:,0:3])[0]):
+        R = tf.matrix_from_quaternion(quat[i, :])
+        rpy[i, :] = tf.euler_from_matrix(R, 'rxyz')
+
+    ax.plot(distances, rpy[:,angle]*180.0/np.pi, color+'-', label=name)
 
 def plot_error_n_dim(ax, distances, errors, results_dir,
                      colors=['r', 'g', 'b'],
@@ -84,4 +97,13 @@ def plot_error_n_dim(ax, distances, errors, results_dir,
     assert len(colors) == errors.shape[1]
     for i in range(len(colors)):
         ax.plot(distances, errors[:, i],
+                colors[i]+'-', label=labels[i])
+
+def plot_error_n_dim_abs(ax, distances, errors, results_dir,
+                     colors=['r', 'g', 'b'],
+                     labels=['x', 'y', 'z']):
+    assert len(colors) == len(labels)
+    assert len(colors) == errors.shape[1]
+    for i in range(len(colors)):
+        ax.plot(distances, abs(errors[:, i]),
                 colors[i]+'-', label=labels[i])

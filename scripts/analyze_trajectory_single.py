@@ -91,6 +91,99 @@ if __name__ == '__main__':
     fig.savefig(plots_dir+'/translation_error' + '_' + traj.align_str
                 + FORMAT, bbox_inches="tight")
 
+    # Absolute value absolute error plot
+    fig = plt.figure(figsize=(8, 2.5))
+    ax = fig.add_subplot(
+        111, xlabel='Distance [m]', ylabel='|Position Drift| [mm]',
+        xlim=[0, traj.accum_distances[-1]])
+    pu.plot_error_n_dim_abs(ax, traj.accum_distances,
+                        traj.abs_errors['abs_e_trans_vec']*1000, plots_dir)
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(plots_dir+'/translation_error_absv' + '_' + traj.align_str
+                + FORMAT, bbox_inches="tight")
+
+    # xyz position plot
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(
+        311, xlabel='Distance [m]', ylabel='x [m]',
+        xlim=[0, traj.accum_distances[-1]])
+
+    pu.plot_xyz(ax, traj.accum_distances,
+                traj.p_es_aligned, 0, 'b', 'Estimate')
+    pu.plot_xyz(ax, traj.accum_distances,
+                traj.p_gt, 0, 'm', 'Groundtruth')
+    ax.legend()
+    ax = fig.add_subplot(
+        312, xlabel='Distance [m]', ylabel='y [m]',
+        xlim=[0, traj.accum_distances[-1]])
+
+    pu.plot_xyz(ax, traj.accum_distances,
+                traj.p_es_aligned, 1, 'b', 'Estimate')
+    pu.plot_xyz(ax, traj.accum_distances,
+                traj.p_gt, 1, 'm', 'Groundtruth')
+    ax.legend()
+    ax = fig.add_subplot(
+        313, xlabel='Distance [m]', ylabel='z [m]',
+        xlim=[0, traj.accum_distances[-1]])
+
+    pu.plot_xyz(ax, traj.accum_distances,
+                traj.p_es_aligned, 2, 'b', 'Estimate')
+    pu.plot_xyz(ax, traj.accum_distances,
+                traj.p_gt, 2, 'm', 'Groundtruth')
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(plots_dir+'/translation' + '_' + traj.align_str
+                + FORMAT, bbox_inches="tight")
+
+    # rpy orientation plot
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(
+        311, xlabel='Distance [m]', ylabel='Roll [deg]',
+        xlim=[0, traj.accum_distances[-1]])
+
+    pu.plot_rpy(ax, traj.accum_distances,
+                traj.q_es_aligned, 0, 'b', 'Estimate')
+    pu.plot_rpy(ax, traj.accum_distances,
+                traj.q_gt, 0, 'm', 'Groundtruth')
+    ax.legend()
+    ax = fig.add_subplot(
+        312, xlabel='Distance [m]', ylabel='Pitch [deg]',
+        xlim=[0, traj.accum_distances[-1]])
+
+    pu.plot_rpy(ax, traj.accum_distances,
+                traj.q_es_aligned, 1, 'b', 'Estimate')
+    pu.plot_rpy(ax, traj.accum_distances,
+                traj.q_gt, 1, 'm', 'Groundtruth')
+    ax.legend()
+    ax = fig.add_subplot(
+        313, xlabel='Distance [m]', ylabel='Yaw [deg]',
+        xlim=[0, traj.accum_distances[-1]])
+
+    pu.plot_rpy(ax, traj.accum_distances,
+                traj.q_es_aligned, 2, 'b', 'Estimate')
+    pu.plot_rpy(ax, traj.accum_distances,
+                traj.q_gt, 2, 'm', 'Groundtruth')
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(plots_dir+'/orientation' + '_' + traj.align_str
+                + FORMAT, bbox_inches="tight")
+
+    # Absolute value absolute orientation error plot
+    fig = plt.figure(figsize=(8, 2.5))
+    ax = fig.add_subplot(
+        111, xlabel='Distance [m]', ylabel='Orient. err. [deg]',
+        xlim=[0, traj.accum_distances[-1]])
+    pu.plot_error_n_dim_abs(
+        ax, traj.accum_distances,
+        traj.abs_errors['abs_e_ypr']*180.0/np.pi, plots_dir,
+        labels=['yaw', 'pitch', 'roll'])
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(plots_dir+'/rotation_error_absv'+'_'+traj.align_str + FORMAT,
+                bbox_inches='tight')
+
+    # Absolute orientation error plot
     fig = plt.figure(figsize=(8, 2.5))
     ax = fig.add_subplot(
         111, xlabel='Distance [m]', ylabel='Orient. err. [deg]',
